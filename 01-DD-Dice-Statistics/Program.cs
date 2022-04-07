@@ -1,7 +1,6 @@
 ﻿using static System.Console;
 using static System.Math;
 
-WriteLine("Hello, World!");
 List<Dice> dices = new();
 
 Dice d4 = new(1, 4, 1, "d4");
@@ -23,7 +22,6 @@ dices.Add(d100);
 List<int> numberOfThrows = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 int counter = 0;
 
-// Write each directory name to a file.
 using (StreamWriter sw = new StreamWriter("DD dices throws.txt")) {
 	foreach (Dice d in dices)
 		sw.WriteLine(d.DescribeDice());
@@ -32,12 +30,6 @@ using (StreamWriter sw = new StreamWriter("DD dices throws.txt")) {
 		foreach (int throws in numberOfThrows)
 			sw.WriteLine($"{++counter}: Roll {throws}{d.name}. Range of outcomes [{d.minVal * throws}-{d.maxVal * throws}] -> |{1 + (((d.maxVal * throws) - (d.minVal * throws)) / d.increment)}|. Possible variations how to roll: {d.NumberOfSides}^{throws} = {Pow(d.NumberOfSides, throws)}");
 }
-
-
-
-
-
-
 
 record Dice {
 	public readonly int minVal;
@@ -65,14 +57,3 @@ record Dice {
 
 	public string DescribeDice() => $"The dice minValue is: {minVal}, maxValue is: {maxVal}, incremenet: {increment}, Number of sides: {NumberOfSides}.";
 }
-
-
-
-
-
-
-
-
-
-
-
