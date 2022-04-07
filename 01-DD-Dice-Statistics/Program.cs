@@ -31,6 +31,13 @@ using (StreamWriter sw = new StreamWriter("DD dices throws.txt")) {
 			sw.WriteLine($"{++counter}: Roll {throws}{d.name}. Range of outcomes [{d.minVal * throws}-{d.maxVal * throws}] -> |{1 + (((d.maxVal * throws) - (d.minVal * throws)) / d.increment)}|. Possible variations how to roll: {d.NumberOfSides}^{throws} = {Pow(d.NumberOfSides, throws)}");
 }
 
+foreach(Dice d in dices) {
+	foreach(int throws in numberOfThrows) {
+		RollStateSpaceCrawler rssc = new(d, throws);
+		rssc.Crawl();
+	}
+}
+
 record Dice {
 	public readonly int minVal;
 	public readonly int maxVal;
@@ -56,4 +63,60 @@ record Dice {
 	}
 
 	public string DescribeDice() => $"The dice minValue is: {minVal}, maxValue is: {maxVal}, incremenet: {increment}, Number of sides: {NumberOfSides}.";
+}
+
+record Partition {
+	public readonly int[] throws;
+	public readonly int sum;
+	public readonly int variations;
+	public Partition(int[] t, int s, int v) {
+		this.throws = t;
+		this.sum = s;
+		this.variations = v;
+	}
+
+	public string Name {
+		get {
+			string result = $"{throws[0]}";
+			for(int i =1; i < throws.Length; i++)
+				result += $" {throws[i]}";
+			return result;
+		}
+	}
+}
+
+class RollOutcomeCrawler {
+	public readonly Dice dice;
+	public readonly int numberOfThrows;
+	public readonly int outcome; // sum of thrown dices
+	public RollOutcomeCrawler(Dice d, int not, int o) {
+		this.dice = d;
+		this.numberOfThrows = not;
+		this.outcome = o;
+	}
+
+	// 1. Enumerate all possible partitions
+	// 2. Foreach possible partition, count how many variations of there are. 
+	// 3. Return: 
+	//		a) Partitions: + their list
+	//		b) foreach partition number of its variations
+	//		c) Sum of all variations of all partitions (With neat table: partition : count of variations + sum line)
+
+	public string Crawl() {
+		return "Hi.";
+	}
+}
+
+class RollStateSpaceCrawler {
+	public readonly Dice dice;
+	public readonly int numberOfThrows;
+	public RollStateSpaceCrawler(Dice d, int numberOfThrows) {
+		this.dice = d;
+		this.numberOfThrows = numberOfThrows;
+	}
+	public void Crawl() {
+		using (StreamWriter sw = new StreamWriter($"{numberOfThrows}{dice.name}.txt")) {
+
+		}
+	}
 }
