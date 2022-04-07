@@ -20,21 +20,24 @@ dices.Add(d12);
 dices.Add(d20);
 dices.Add(d100);
 
-foreach(Dice d in dices)
-	WriteLine(d.DescribeDice());
-
 List<int> numberOfThrows = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
 int counter = 0;
-foreach(Dice d in dices)
-	foreach(int throws in numberOfThrows) {
-		WriteLine($"{++counter}: Roll {throws}{d.name}. Range of outcomes [{d.minVal * throws}-{d.maxVal * throws}] -> |{1 + (((d.maxVal * throws) - (d.minVal * throws)) / d.increment)}|. Possible variations how to roll: {d.NumberOfSides}^{throws} = {Pow(d.NumberOfSides, throws)}");
-		/*WriteLine($"Range of possible results: ");
-		WriteLine($"Number of different outcomes of roll: ");
-		WriteLine($"Number of combinations how dices can be rolled. Dice has {d.NumberOfSides} sides. We throw {throws} dices independently.");
-		WriteLine($"Making number of ");
-		WriteLine();*/
-	}
+
+// Write each directory name to a file.
+using (StreamWriter sw = new StreamWriter("DD dices throws.txt")) {
+	foreach (Dice d in dices)
+		sw.WriteLine(d.DescribeDice());
+	sw.WriteLine("____");
+	foreach (Dice d in dices)
+		foreach (int throws in numberOfThrows)
+			sw.WriteLine($"{++counter}: Roll {throws}{d.name}. Range of outcomes [{d.minVal * throws}-{d.maxVal * throws}] -> |{1 + (((d.maxVal * throws) - (d.minVal * throws)) / d.increment)}|. Possible variations how to roll: {d.NumberOfSides}^{throws} = {Pow(d.NumberOfSides, throws)}");
+}
+
+
+
+
+
+
 
 record Dice {
 	public readonly int minVal;
