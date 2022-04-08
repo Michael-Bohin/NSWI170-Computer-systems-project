@@ -1,5 +1,4 @@
-﻿using static System.Console;
-using static System.Math;
+﻿using static System.Math;
 
 int minVal = 1;
 int maxVal = 4;
