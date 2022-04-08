@@ -6,7 +6,7 @@ int increment = 1;
 
 for(int dices = 1; dices < 10; dices++) {
     RollCalculator rc = new(dices, minVal, maxVal, increment);
-    using (StreamWriter swLog = new($"./d{maxVal}/DetailedLog/{dices}d{maxVal}-DISABLED-Detailed-Calculation-log.txt")) 
+    using (StreamWriter swLog = new($"./d{maxVal}/DetailedLog/{dices}d{maxVal}-Detailed-Calculation-log.txt")) 
         rc.EnumerateAllPossibleRolls(swLog);
 
     using (StreamWriter swSummary = new($"./d{maxVal}/{dices}d{maxVal}-Roll-Summary.txt")) 
