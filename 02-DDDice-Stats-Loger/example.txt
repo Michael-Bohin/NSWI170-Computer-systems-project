@@ -1,0 +1,181 @@
+Roll sum 0: 0
+Roll sum 1: 0
+Roll sum 2: 0
+Roll sum 3: 0
+Roll sum 4: 0
+Roll sum 5: 0
+Roll sum 6: 0
+Roll sum 7: 0
+Roll sum 8: 0
+Roll sum 9: 0
+Roll sum 10: 0
+Roll sum 11: 0
+Roll sum 12: 0
+Roll sum 13: 0
+Roll sum 14: 0
+Roll sum 15: 0
+Roll sum 16: 0
+Roll sum 17: 0
+Roll sum 18: 0
+Roll sum 19: 0
+Roll sum 20: 0
+Roll sum 21: 1   >>> Frequency: 1e-06
+Roll sum 22: 0
+Roll sum 23: 1   >>> Frequency: 1e-06
+Roll sum 24: 0
+Roll sum 25: 1   >>> Frequency: 1e-06
+Roll sum 26: 0
+Roll sum 27: 1   >>> Frequency: 1e-06
+Roll sum 28: 1   >>> Frequency: 1e-06
+Roll sum 29: 5   >>> Frequency: 5e-06
+Roll sum 30: 6   >>> Frequency: 6e-06
+Roll sum 31: 13   >>> Frequency: 1.3e-05
+Roll sum 32: 20   >>> Frequency: 2e-05
+Roll sum 33: 14   >>> Frequency: 1.4e-05
+Roll sum 34: 25   >>> Frequency: 2.5e-05
+Roll sum 35: 27   >>> Frequency: 2.7e-05
+Roll sum 36: 48   >>> Frequency: 4.8e-05
+Roll sum 37: 67   >>> Frequency: 6.7e-05
+Roll sum 38: 57   >>> Frequency: 5.7e-05
+Roll sum 39: 84   >>> Frequency: 8.4e-05
+Roll sum 40: 132   >>> Frequency: 0.000132
+Roll sum 41: 149   >>> Frequency: 0.000149
+Roll sum 42: 166   >>> Frequency: 0.000166
+Roll sum 43: 229   >>> Frequency: 0.000229
+Roll sum 44: 283   >>> Frequency: 0.000283
+Roll sum 45: 291   >>> Frequency: 0.000291
+Roll sum 46: 412   >>> Frequency: 0.000412
+Roll sum 47: 478   >>> Frequency: 0.000478
+Roll sum 48: 580   >>> Frequency: 0.00058
+Roll sum 49: 662   >>> Frequency: 0.000662
+Roll sum 50: 837   >>> Frequency: 0.000837
+Roll sum 51: 903   >>> Frequency: 0.000903
+Roll sum 52: 1080   >>> Frequency: 0.00108
+Roll sum 53: 1288   >>> Frequency: 0.001288
+Roll sum 54: 1509   >>> Frequency: 0.001509
+Roll sum 55: 1775   >>> Frequency: 0.001775
+Roll sum 56: 1969   >>> Frequency: 0.001969
+Roll sum 57: 2202   >>> Frequency: 0.002202
+Roll sum 58: 2535   >>> Frequency: 0.002535
+Roll sum 59: 2857   >>> Frequency: 0.002857
+Roll sum 60: 3290   >>> Frequency: 0.00329
+Roll sum 61: 3569   >>> Frequency: 0.003569
+Roll sum 62: 4181   >>> Frequency: 0.004181
+Roll sum 63: 4592   >>> Frequency: 0.004592
+Roll sum 64: 5026   >>> Frequency: 0.005026
+Roll sum 65: 5504   >>> Frequency: 0.005504
+Roll sum 66: 6010   >>> Frequency: 0.00601
+Roll sum 67: 6761   >>> Frequency: 0.006761
+Roll sum 68: 7496   >>> Frequency: 0.007496
+Roll sum 69: 8001   >>> Frequency: 0.008001
+Roll sum 70: 8933   >>> Frequency: 0.008933
+Roll sum 71: 9493   >>> Frequency: 0.009493
+Roll sum 72: 10028   >>> Frequency: 0.010028
+Roll sum 73: 10996   >>> Frequency: 0.010996
+Roll sum 74: 11605   >>> Frequency: 0.011605
+Roll sum 75: 12387   >>> Frequency: 0.012387
+Roll sum 76: 13212   >>> Frequency: 0.013212
+Roll sum 77: 13914   >>> Frequency: 0.013914
+Roll sum 78: 14878   >>> Frequency: 0.014878
+Roll sum 79: 15528   >>> Frequency: 0.015528
+Roll sum 80: 16238   >>> Frequency: 0.016238
+Roll sum 81: 17043   >>> Frequency: 0.017043
+Roll sum 82: 17789   >>> Frequency: 0.017789
+Roll sum 83: 18498   >>> Frequency: 0.018498
+Roll sum 84: 18831   >>> Frequency: 0.018831
+Roll sum 85: 19724   >>> Frequency: 0.019724
+Roll sum 86: 20167   >>> Frequency: 0.020167
+Roll sum 87: 20850   >>> Frequency: 0.02085
+Roll sum 88: 21331   >>> Frequency: 0.021331
+Roll sum 89: 21407   >>> Frequency: 0.021407
+Roll sum 90: 21881   >>> Frequency: 0.021881
+Roll sum 91: 22230   >>> Frequency: 0.02223
+Roll sum 92: 22425   >>> Frequency: 0.022425
+Roll sum 93: 22995   >>> Frequency: 0.022995
+Roll sum 94: 22677   >>> Frequency: 0.022677
+Roll sum 95: 22645   >>> Frequency: 0.022645
+Roll sum 96: 22686   >>> Frequency: 0.022686
+Roll sum 97: 22532   >>> Frequency: 0.022532
+Roll sum 98: 22297   >>> Frequency: 0.022297
+Roll sum 99: 22143   >>> Frequency: 0.022143
+Roll sum 100: 21513   >>> Frequency: 0.021513
+Roll sum 101: 21303   >>> Frequency: 0.021303
+Roll sum 102: 20541   >>> Frequency: 0.020541
+Roll sum 103: 20365   >>> Frequency: 0.020365
+Roll sum 104: 19611   >>> Frequency: 0.019611
+Roll sum 105: 19176   >>> Frequency: 0.019176
+Roll sum 106: 18669   >>> Frequency: 0.018669
+Roll sum 107: 17559   >>> Frequency: 0.017559
+Roll sum 108: 16841   >>> Frequency: 0.016841
+Roll sum 109: 16218   >>> Frequency: 0.016218
+Roll sum 110: 15283   >>> Frequency: 0.015283
+Roll sum 111: 14881   >>> Frequency: 0.014881
+Roll sum 112: 14136   >>> Frequency: 0.014136
+Roll sum 113: 13118   >>> Frequency: 0.013118
+Roll sum 114: 12607   >>> Frequency: 0.012607
+Roll sum 115: 11648   >>> Frequency: 0.011648
+Roll sum 116: 10944   >>> Frequency: 0.010944
+Roll sum 117: 10008   >>> Frequency: 0.010008
+Roll sum 118: 9341   >>> Frequency: 0.009341
+Roll sum 119: 8589   >>> Frequency: 0.008589
+Roll sum 120: 8112   >>> Frequency: 0.008112
+Roll sum 121: 7341   >>> Frequency: 0.007341
+Roll sum 122: 6685   >>> Frequency: 0.006685
+Roll sum 123: 6055   >>> Frequency: 0.006055
+Roll sum 124: 5469   >>> Frequency: 0.005469
+Roll sum 125: 5046   >>> Frequency: 0.005046
+Roll sum 126: 4548   >>> Frequency: 0.004548
+Roll sum 127: 4089   >>> Frequency: 0.004089
+Roll sum 128: 3733   >>> Frequency: 0.003733
+Roll sum 129: 3288   >>> Frequency: 0.003288
+Roll sum 130: 2866   >>> Frequency: 0.002866
+Roll sum 131: 2542   >>> Frequency: 0.002542
+Roll sum 132: 2163   >>> Frequency: 0.002163
+Roll sum 133: 1897   >>> Frequency: 0.001897
+Roll sum 134: 1698   >>> Frequency: 0.001698
+Roll sum 135: 1503   >>> Frequency: 0.001503
+Roll sum 136: 1319   >>> Frequency: 0.001319
+Roll sum 137: 1154   >>> Frequency: 0.001154
+Roll sum 138: 910   >>> Frequency: 0.00091
+Roll sum 139: 815   >>> Frequency: 0.000815
+Roll sum 140: 705   >>> Frequency: 0.000705
+Roll sum 141: 605   >>> Frequency: 0.000605
+Roll sum 142: 481   >>> Frequency: 0.000481
+Roll sum 143: 396   >>> Frequency: 0.000396
+Roll sum 144: 352   >>> Frequency: 0.000352
+Roll sum 145: 279   >>> Frequency: 0.000279
+Roll sum 146: 220   >>> Frequency: 0.00022
+Roll sum 147: 186   >>> Frequency: 0.000186
+Roll sum 148: 156   >>> Frequency: 0.000156
+Roll sum 149: 112   >>> Frequency: 0.000112
+Roll sum 150: 83   >>> Frequency: 8.3e-05
+Roll sum 151: 96   >>> Frequency: 9.6e-05
+Roll sum 152: 64   >>> Frequency: 6.4e-05
+Roll sum 153: 41   >>> Frequency: 4.1e-05
+Roll sum 154: 39   >>> Frequency: 3.9e-05
+Roll sum 155: 27   >>> Frequency: 2.7e-05
+Roll sum 156: 28   >>> Frequency: 2.8e-05
+Roll sum 157: 12   >>> Frequency: 1.2e-05
+Roll sum 158: 10   >>> Frequency: 1e-05
+Roll sum 159: 5   >>> Frequency: 5e-06
+Roll sum 160: 7   >>> Frequency: 7e-06
+Roll sum 161: 3   >>> Frequency: 3e-06
+Roll sum 162: 4   >>> Frequency: 4e-06
+Roll sum 163: 1   >>> Frequency: 1e-06
+Roll sum 164: 1   >>> Frequency: 1e-06
+Roll sum 165: 1   >>> Frequency: 1e-06
+Roll sum 166: 0
+Roll sum 167: 0
+Roll sum 168: 0
+Roll sum 169: 0
+Roll sum 170: 1   >>> Frequency: 1e-06
+Roll sum 171: 0
+Roll sum 172: 0
+Roll sum 173: 0
+Roll sum 174: 0
+Roll sum 175: 0
+Roll sum 176: 0
+Roll sum 177: 0
+Roll sum 178: 0
+Roll sum 179: 0
+Roll sum 180: 0
