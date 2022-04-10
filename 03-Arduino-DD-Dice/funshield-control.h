@@ -52,8 +52,4 @@ private:
     }
 };
 
-class Animation {
-
-};
-
 #endif

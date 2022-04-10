@@ -42,7 +42,6 @@ private:
     DDDice dice;
     Button btn1, btn2, btn3;
     FunshieldOutput out;
-    Animation animation;
 
     size_t rollSum = 38;
     bool normalMode = true;
