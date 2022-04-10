@@ -19,23 +19,25 @@ public:
             initRoll();
 
         if (btn1.state == RELEASED) 
-            btn1Released();
+            finishRoll();
 
         if (btn2.state == CLICK_DOWN) 
-            btn2ClickedDown();
+            incrementThrows();
 
         if (btn3.state == CLICK_DOWN) 
-            btn3ClickedDown();
+            incrementDiceType();
 
-        if (btn1.state == PRESSED_ON && !normalMode && btn3.state == CLICK_DOWN)
+        if (btn1.state == PRESSED_ON && !normalMode && btn3.state == CLICK_DOWN) {
             animateTime = !animateTime;
+            invalidateNormalModeTransform = true;
+        }
     }
     
     void SetOutput() {
         if (normalMode)
             displayNormalMode();
         else 
-            displayConfigMode();
+            out.displayConfigMode(throws, animateTime, diceType);
     }
 
 private:
@@ -45,6 +47,7 @@ private:
 
     size_t rollSum = 38;
     bool normalMode = true;
+    bool invalidateNormalModeTransform = false;
     unsigned long rollTime = 0;
 
     size_t throws = 1;
@@ -58,28 +61,31 @@ private:
     bool animateTime = false;
 
 
-    void initRoll() {
+    void initRoll() { // btn1 clicked down
         animating = true;
         rollTime = micros(); // start the measruement of time when the button is pressed down
     }
 
-    void btn1Released() {
+    void finishRoll() { // btn1 released
         if (normalMode) {
             animating = false;
             rollSum = dice.Roll(types[diceType], throws, micros() - rollTime);
         } else {
-            normalMode = true;
+            if (!invalidateNormalModeTransform) 
+                normalMode = true;
+            else 
+                invalidateNormalModeTransform = false;
         }
     }
 
-    void btn2ClickedDown() {
+    void incrementThrows() { // btn2 clicked down
         if (normalMode) 
             normalMode = false;
         else 
             throws = throws == 9 ? 1 : throws += 1; // incrementaly cycle 1-9
     }
 
-    void btn3ClickedDown() {
+    void incrementDiceType() {
         if (normalMode) 
             normalMode = false;
         else 
@@ -96,39 +102,11 @@ private:
             out.writeNumber(rollSum);
     }
 
-    void displayConfigMode() {
-        out.writeDigit(throws, 3);
-        if (animateTime)
-            out.writeByte(0x21, 2); // 21 reprezentuje 'd.'
-        else
-            out.writeByte(0xA1, 2); // A1 reprezentuje 'd'
-
-        switch(diceType) {
-        case 0: 
-            out.writeDigit(4, 1); break;
-        case 1:
-            out.writeDigit(6, 1); break;
-        case 2:
-            out.writeDigit(8, 1); break;
-        case 3:
-            out.writeDigit(1, 1); 
-            out.writeDigit(0, 0);
-            break;
-        case 4:
-            out.writeDigit(1, 1);
-            out.writeDigit(2, 0);
-            break;
-        case 5:
-            out.writeDigit(2, 1);
-            out.writeDigit(0, 0);
-            break;
-        case 6:
-            out.writeDigit(0, 1);
-            out.writeDigit(0, 0);
-            break;
-        default:
-            out.writeNumber(9999); // signal critical error in code
-        }
+    void animateMilliseconds() {
+        unsigned long time = micros() - rollTime;
+        time /= 1000; // convert to micros
+        time %= displayLimit; // modulo limit of display -> 10 seconds
+        out.writeNumber(time);
     }
 
     void animatePastRolls() {
@@ -137,13 +115,6 @@ private:
             pastRollSum = dice.Roll(types[diceType], throws, micros() - rollTime);
         }
         out.writeNumber(pastRollSum);
-    }
-
-    void animateMilliseconds() {
-        unsigned long time = micros() - rollTime;
-        time /= 1000; // convert to micros
-        time %= displayLimit; // modulo limit of display -> 10 seconds
-        out.writeNumber(time);
     }
 };
 
