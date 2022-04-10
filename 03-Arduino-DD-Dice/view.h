@@ -26,6 +26,9 @@ public:
 
         if (btn3.state == CLICK_DOWN) 
             btn3ClickedDown();
+
+        if (btn1.state == PRESSED_ON && !normalMode && btn3.state == CLICK_DOWN)
+            animateTime = !animateTime;
     }
     
     void SetOutput() {
@@ -43,12 +46,18 @@ private:
 
     size_t rollSum = 38;
     bool normalMode = true;
-    bool animating = false;
     unsigned long rollTime = 0;
 
     size_t throws = 1;
     size_t diceType = 0;
-    DiceType types[7] {DiceType::d4, DiceType::d6, DiceType::d8, DiceType::d10, DiceType::d12, DiceType::d20, DiceType::d100};
+    DiceType types[7] { DiceType::d4, DiceType::d6, DiceType::d8, DiceType::d10, DiceType::d12, DiceType::d20, DiceType::d100 };
+
+    // data fields for animation:
+    bool animating = false;
+    size_t pastRollSum = 0;
+    unsigned long pastRollTime = 0;
+    bool animateTime = false;
+
 
     void initRoll() {
         animating = true;
@@ -79,15 +88,21 @@ private:
     }
 
     void displayNormalMode() {
-        if (animating)
-            out.writeNumber(8888);
-        else
+        if (animating) {            
+            if (animateTime) 
+                animateMilliseconds();
+            else 
+                animatePastRolls();
+        } else
             out.writeNumber(rollSum);
     }
 
     void displayConfigMode() {
         out.writeDigit(throws, 3);
-        out.writeByte(0xA1, 2); // A1 reprezentuje 'd'
+        if (animateTime)
+            out.writeByte(0x21, 2); // 21 reprezentuje 'd.'
+        else
+            out.writeByte(0xA1, 2); // A1 reprezentuje 'd'
 
         switch(diceType) {
         case 0: 
@@ -117,7 +132,20 @@ private:
         }
     }
 
+    void animatePastRolls() {
+        if (pastRollTime < (millis() - 200)) { // roll each 200milis = 200 000 micros
+            pastRollTime = millis();
+            pastRollSum = dice.Roll(types[diceType], throws, micros() - rollTime);
+        }
+        out.writeNumber(pastRollSum);
+    }
 
+    void animateMilliseconds() {
+        unsigned long time = micros() - rollTime;
+        time /= 1000; // convert to micros
+        time %= displayLimit; // modulo limit of display -> 10 seconds
+        out.writeNumber(time);
+    }
 };
 
 #endif
