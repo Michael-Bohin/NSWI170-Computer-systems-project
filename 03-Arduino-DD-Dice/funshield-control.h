@@ -41,9 +41,7 @@ public:
                 break;
         }
     }
-    void writeDigit(size_t n, size_t pos) { writeGlyphR(digits[n], pos); }
-    void writeByte(byte glyph, size_t pos) { writeGlyphR(glyph, pos); }
-
+    
     void displayConfigMode(size_t throws, bool animateTime, DiceType diceType) {
         writeDigit(throws, 3);
         if (animateTime)
@@ -53,8 +51,21 @@ public:
         writeDice(diceType);
     }
 
+    void incrementMultiplex() {
+        multiplexPos++;
+        multiplexPos %= 4;
+    }
+
 private:
+    size_t multiplexPos = 0;
+
+    void writeDigit(size_t n, size_t pos) { writeGlyphR(digits[n], pos); }
+    void writeByte(byte glyph, size_t pos) { writeGlyphR(glyph, pos); }
+
     void writeGlyphR(byte glyph, size_t pos) {
+        // zde konèí všechny typy write volání -> v tomto místì se tedy podíváme, jestli multiplex souhlasí. Pokud ne, vrátíme se aniž bychom write provedli. 
+        if (pos != multiplexPos)
+            return;
         writeGlyphBitmask(glyph, digit_muxpos[digit_positions - pos - 1]);
     }
 

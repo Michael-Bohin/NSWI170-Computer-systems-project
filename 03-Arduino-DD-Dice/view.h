@@ -38,6 +38,7 @@ public:
             displayNormalMode();
         else 
             out.displayConfigMode(throws, animateTime, diceType);
+        out.incrementMultiplex();
     }
 
 private:
