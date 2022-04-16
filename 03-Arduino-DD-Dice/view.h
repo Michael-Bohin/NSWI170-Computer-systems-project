@@ -51,8 +51,7 @@ private:
     unsigned long rollTime = 0;
 
     size_t throws = 1;
-    size_t diceType = 0;
-    DiceType types[7] { DiceType::d4, DiceType::d6, DiceType::d8, DiceType::d10, DiceType::d12, DiceType::d20, DiceType::d100 };
+    DiceType diceType = d4;
 
     // data fields for animation:
     bool animating = false;
@@ -69,7 +68,7 @@ private:
     void finishRoll() { // btn1 released
         if (normalMode) {
             animating = false;
-            rollSum = dice.Roll(types[diceType], throws, micros() - rollTime);
+            rollSum = dice.Roll(diceType, throws, micros() - rollTime);
         } else {
             if (!invalidateNormalModeTransform) 
                 normalMode = true;
@@ -86,10 +85,13 @@ private:
     }
 
     void incrementDiceType() {
-        if (normalMode) 
+        if (normalMode) {
             normalMode = false;
-        else 
-            diceType = diceType == 6 ? 0 : diceType += 1; // incrementaly cycle 0-6
+        } else { // incrementaly cycle 0-6:
+            size_t diceId = (size_t)diceType;
+            diceId = diceId == 6 ? 0 : ++diceId;
+            diceType = (DiceType)diceId;
+        }
     }
 
     void displayNormalMode() {
@@ -112,7 +114,7 @@ private:
     void animatePastRolls() {
         if (pastRollTime < (millis() - 200)) { // roll each 200milis = 200 000 micros
             pastRollTime = millis();
-            pastRollSum = dice.Roll(types[diceType], throws, micros() - rollTime);
+            pastRollSum = dice.Roll(diceType, throws, micros() - rollTime);
         }
         out.writeNumber(pastRollSum);
     }

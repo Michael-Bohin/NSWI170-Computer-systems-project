@@ -1,5 +1,10 @@
 #include "funshield-constants.h"
 
+#ifndef DICETYPE_
+#define DICETYPE_
+enum DiceType { d4, d6, d8, d10, d12, d20, d100 };
+#endif
+
 #ifndef FUNSHIELD_CONTROL
 #define FUNSHIELD_CONTROL
 
@@ -39,7 +44,7 @@ public:
     void writeDigit(size_t n, size_t pos) { writeGlyphR(digits[n], pos); }
     void writeByte(byte glyph, size_t pos) { writeGlyphR(glyph, pos); }
 
-    void displayConfigMode(size_t throws, bool animateTime, size_t diceType) {
+    void displayConfigMode(size_t throws, bool animateTime, DiceType diceType) {
         writeDigit(throws, 3);
         if (animateTime)
             writeByte(0x21, 2); // 21 reprezentuje 'd.'
@@ -60,27 +65,27 @@ private:
         digitalWrite(latch_pin, HIGH);
     }
 
-    void writeDice(size_t diceType) {
+    void writeDice(DiceType diceType) {
         switch (diceType) {
-        case 0:
+        case d4:
             writeDigit(4, 1); break;
-        case 1:
+        case d6:
             writeDigit(6, 1); break;
-        case 2:
+        case d8:
             writeDigit(8, 1); break;
-        case 3:
+        case d10:
             writeDigit(1, 1);
             writeDigit(0, 0);
             break;
-        case 4:
+        case d12:
             writeDigit(1, 1);
             writeDigit(2, 0);
             break;
-        case 5:
+        case d20:
             writeDigit(2, 1);
             writeDigit(0, 0);
             break;
-        case 6:
+        case d100:
             writeDigit(0, 1);
             writeDigit(0, 0);
             break;
