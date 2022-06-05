@@ -33,7 +33,7 @@ public:
 	// size_t Roll(DiceType dice, size_t throws, unsigned long randomSeed) { }
 
 private:
-	std::default_random_engine generator{ 38 };
+	std::default_random_engine generator{ (unsigned int)std::time(0) };
 	size_t min, max, throws;
 	DiceType dice;
 
