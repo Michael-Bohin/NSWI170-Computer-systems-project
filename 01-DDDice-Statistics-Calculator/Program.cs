@@ -1,11 +1,12 @@
 ﻿namespace DnD_Probability_Calculator;
 using static System.Math;
+using static System.Console;
 
 public enum DiceType { d4 = 4, d6 = 6, d8 = 8, d10 = 10, d12 = 12, d20 = 20 };
 
 class Program {
     static void Main() {
-        for (uint rolls = 1; rolls < 10; rolls++)
+        for (uint rolls = 1; rolls < 5; rolls++)
 			foreach (DiceType type in Enum.GetValues<DiceType>()) {
                 DDDice_ProbabilitySpaceEnumerator pe = new(type, rolls);
                 pe.EnumerateAllPossibleOutcomes();
@@ -38,10 +39,9 @@ public class DDDice_ProbabilitySpaceEnumerator {
         maxRollSum = rolls * (uint)dType;
 	}
 
-    
-
     public void EnumerateAllPossibleOutcomes() {
-        using (StreamWriter swLog = new($"./d{dType}/DetailedLog/{rolls}d{dType}-Detailed-Calculation-log.txt")) {
+        WriteLine($"Writting to file: ./d{(uint)dType}/DetailedLog/{rolls}d{(uint)dType}-Detailed-Calculation-log.txt");
+        using (StreamWriter swLog = new($"./d{(uint)dType}/DetailedLog/{rolls}d{(uint)dType}-Detailed-Calculation-log.txt")) {
             for (uint targetSum = minRollSum; targetSum <= maxRollSum; targetSum++) {
                 CompositionsCounter cc = new(targetSum, rolls, min, (uint)dType, increment);
                 cc.SearchPartitions();
@@ -55,15 +55,16 @@ public class DDDice_ProbabilitySpaceEnumerator {
     }
 
     public void PrintSummary() {
-        using (StreamWriter sw = new($"./d{dType}/{rolls}d{dType}-Roll-Summary.txt")) {
-            sw.WriteLine($"Summary of roll with {rolls} dices and dice type {min}-{dType} >> {rolls}d{dType}\n");
+        WriteLine($"Writting to file: ./d{(uint)dType}/{rolls}d{(uint)dType}-Roll-Summary.txt\n");
+        using (StreamWriter sw = new($"./d{(uint)dType}/{rolls}d{(uint)dType}-Roll-Summary.txt")) {
+            sw.WriteLine($"Summary of roll with {rolls} dices and dice type {min}-{(uint)dType} >> {rolls}d{(uint)dType}\n");
             foreach (TargetSumEnumeration rst in targetSumStats) {
                 totalPartitions += rst.partitions;
                 totalCompositions += rst.compositions;
                 sw.WriteLine($"Target sum: {rst.targetSum}, partitions: {rst.partitions}, compositions: {rst.compositions}");
             }
 
-            sw.WriteLine($"Total number of different roll outcomes of roll {rolls}d{dType}:");
+            sw.WriteLine($"Total number of different roll outcomes of roll {rolls}d{(uint)dType}:");
             sw.WriteLine($"Partitions: {totalPartitions}, compositions: {totalCompositions}");
 
             // Sumcheck dvojim pocitanim. Vime kolik ma vyjit celkem compositions: (pocet stran kostky) na (pocet hozenych kosteck).
