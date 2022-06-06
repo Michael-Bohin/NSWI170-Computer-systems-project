@@ -24,11 +24,9 @@ public record Partition {
 }
 
 // Ways to speed up the crawler:
-// 1. Pocet compositions je symetricky - druhou pulku nemusime pocitat, staci opsat vysledek
-// 2. Pocitej vycet partitions pro ruzne soucty paralelne. Jejich vypocet je nezavisly.
-// 3. Rozmysli si zpusob jak nekopirovat List<uint> v rekurzivnim hledani Searchpartitions.
-// 4. Predpocitej si pocet partitions pro vsechny pocitane kombinace. 99% Vypocet variace s opakovanim hodnekrat opakuje.
-// 5. Napis funkci ktera udela lookup vysledku
+// 1. Pocitej vycet partitions pro ruzne soucty paralelne. Jejich vypocet je nezavisly.
+// 2. Rozmysli si zpusob jak nekopirovat List<uint> v rekurzivnim hledani Searchpartitions.
+// 3. Predpocitej si pocet compositions pro vsechny pocitane partitions. 99% Vypoctu variace s opakovanim se hodnekrat opakuje. Napis funkci ktera udela lookup vysledku.
 public class DnD_Dice_Probability_Space_Crawler {
 	//
 	// >>> these data are important for json serializer and catch all results of space crawl <<<
@@ -67,9 +65,21 @@ public class DnD_Dice_Probability_Space_Crawler {
 	}
 
 	public void SearchPartitions() { // and for each partition compute number of its compositions...
-		for(uint i = minRollSum; i <= maxRollSum; i++) {
+		// only count rollSum with same compositions count once (symetrie)
+		uint upTo = minRollSum / 2 + maxRollSum / 2;
+		for(uint i = minRollSum; i <= upTo; i++) {
 			targetSum = (int)i; // save the target sum here, so that recursive calls of search dont need to pass the value..
 			SearchPartitions(new List<uint>(), i, 1);
+		}
+
+		// now copy raw results: number of compositions and probability to its symetric rollSums..
+		int x = (int)minRollSum;
+		int y = (int)maxRollSum;
+		while(x < y) {
+			compositionsSubtotals[y] = compositionsSubtotals[x];
+			sum_probability[y] = sum_probability[x];
+			x++;
+			y--;
 		}
 	}
 
