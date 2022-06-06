@@ -3,23 +3,72 @@ using static System.Math;
 using static System.Console;
 public enum DiceType { d4 = 4, d6 = 6, d8 = 8, d10 = 10, d12 = 12, d20 = 20 };
 
+public record TrieNode {
+	public TrieNode(ulong value) {
+		val = value;
+	}
+	public ulong val;
+	public TrieNode[] children = new TrieNode[21]; // for max repetition posssible at 9d20
+}
+
+public class CachedVariationsCount {
+	public TrieNode root = new TrieNode(1);
+	public ulong citatel = 1;
+	static readonly uint[] factorial = new uint[] { 1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880 };
+
+	public void ResetCachedVariations(uint nextDicesCount) { // always dices factorial
+		citatel = factorial[nextDicesCount];
+		root = new TrieNode(citatel); // if there is no repetition the number of compositions is simply dices factorial..
+	}
+
+	// assumes repettions are arriving cached
+	public ulong GetVariation(List<int> repetitions) {
+		if(repetitions.Count == 0) // case no repetitions -> variation is permutation
+			return citatel;
+
+		// 1. foreach repetition
+		// 2.		check if next trie node exists, if it doesnt, instantiate it with proper value
+		// 3.		set node to be he next node in trie path
+		// 4. return value from node
+
+		TrieNode node = root;
+		foreach (int rep in repetitions) {
+			if(node.children[rep] == null) {
+				node.children[rep] = new TrieNode(node.val / factorial[rep]); // here the division is done only once -> in the implementation before it was repeated thousands of times
+			}
+			node = node.children[rep];
+		}
+
+		return node.val;
+	}
+}
+
 // this place could get significantly improved by precalculating same values of partition -> compositionCount to a table. 
 // many partition will repeat the calculation to get the same result...
-public record Partition {
+public class Partition {
 	public List<uint> parts;
 	public ulong compositions;
-	static readonly uint[] factorial = new uint[] { 1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880 };
-	
+	static CachedVariationsCount variationsCache =  new();
+
 	public Partition(List<uint> p, uint maxPart) { // tell partition constructor max value of any part
 		parts = p;
-		uint[] counts = new uint[maxPart + 1];
+		int[] counts = new int[maxPart + 1];
 		foreach (int i in parts)
 			counts[i]++;
 
-		compositions = factorial[parts.Count];
-		foreach (uint opakovani in counts)
+		List<int> repetitions = new();
+		foreach (int opakovani in counts)
 			if (opakovani > 1)
-				compositions /= factorial[opakovani];
+				repetitions.Add(opakovani);
+
+		if(repetitions.Count > 1)
+			repetitions.Sort(); // this opp might make it not worth it..
+
+		compositions = variationsCache.GetVariation(repetitions);
+	}
+
+	public static void ResetCachedVariations(uint nextDicesCount) { // always dices factorial
+		variationsCache.ResetCachedVariations(nextDicesCount);
 	}
 }
 
