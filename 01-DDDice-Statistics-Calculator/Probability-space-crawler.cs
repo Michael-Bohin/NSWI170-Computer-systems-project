@@ -71,16 +71,6 @@ public class DnD_Dice_Probability_Space_Crawler {
 			targetSum = (int)i; // save the target sum here, so that recursive calls of search dont need to pass the value..
 			SearchPartitions(new List<uint>(), i, 1);
 		}
-
-		// now copy raw results: number of compositions and probability to its symetric rollSums..
-		int x = (int)minRollSum;
-		int y = (int)maxRollSum;
-		while(x < y) {
-			compositionsSubtotals[y] = compositionsSubtotals[x];
-			sum_probability[y] = sum_probability[x];
-			x++;
-			y--;
-		}
 	}
 
 	// most space (and alocation time) can be saved by figuring out how to make copying values of list redundant
@@ -108,15 +98,28 @@ public class DnD_Dice_Probability_Space_Crawler {
 	}
 
 	public void Sum_Compositions_Probabilities() {
-		for(int i = 1; i <= maxRollSum; i++) {
+		uint upTo = minRollSum / 2 + maxRollSum / 2;
+
+		for (int i = 1; i <= upTo; i++) {
 			foreach(Partition p in partitions[i]) 
 				compositionsSubtotals[i] += p.compositions;
 			allCompositions += compositionsSubtotals[i];
 			sum_probability[i] = (double) compositionsSubtotals[i] / d_possibleOutcomes;
 		}
 
+		// now copy raw results: number of compositions and probability to its symetric rollSums..
+		int x = (int)minRollSum;
+		int y = (int)maxRollSum;
+		while (x < y) {
+			compositionsSubtotals[y] = compositionsSubtotals[x];
+			allCompositions += compositionsSubtotals[x];
+			sum_probability[y] = sum_probability[x];
+			x++;
+			y--;
+		}
+
 		// now assert allComositions == possibleOutcomes, if not, the code is incorrect -> kill the process
-		if(allCompositions != possibleOutcomes)
+		if (allCompositions != possibleOutcomes)
 			throw new Exception($"All compositions and possible outcomes are not the same at the end of probability space crawl!\n There is critical error in code.\n {allCompositions} != {possibleOutcomes}, dices: {dices}, diceType: {diceType}");
 	}
 
