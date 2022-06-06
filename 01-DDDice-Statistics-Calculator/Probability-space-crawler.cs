@@ -192,7 +192,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 
 			// detailed log
 			/*
-			for (int i = 1; i < partitions.Count; i++) {
+			for (int i = 1; i < partitions.Count; i++) {x
 				if(compositionsSubtotals[i] == 0)
 					continue;
 				sw.WriteLine($"Target sum: {i}, has total of {compositionsSubtotals[i]} and probability: {sum_probability[i]}");
