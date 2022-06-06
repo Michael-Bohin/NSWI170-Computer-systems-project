@@ -74,7 +74,7 @@ public class Partition {
 // Ways to speed up the crawler:
 // 1. Pocitej vycet partitions pro ruzne soucty paralelne. Jejich vypocet je nezavisly.
 // 2. Rozmysli si zpusob jak nekopirovat List<uint> v rekurzivnim hledani Searchpartitions.
-// 3. Predpocitej si pocet compositions pro vsechny pocitane partitions. 99% Vypoctu variace s opakovanim se hodnekrat opakuje. Napis funkci ktera udela lookup vysledku.
+// 3. Neukladaej partitions pro detailed log reference
 public class DnD_Dice_Probability_Space_Crawler {
 	//
 	// >>> these data are important for json serializer and catch all results of space crawl <<<
@@ -93,7 +93,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 	int targetSum;
 	readonly double d_possibleOutcomes; // reasonable to also save as double, as it would be recasted from long to double many times in probs calculation...
 	ulong allCompositions; // sum of totalCompositions of all roll sums, used as double check of correctness. Must be equal to possible Outcomes.
-	List<List<Partition>> partitions = new();
+	// List<List<Partition>> partitions = new();
 
 	public DnD_Dice_Probability_Space_Crawler(uint d, DiceType dt) {
 		dices = d;
@@ -106,7 +106,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 		possibleOutcomes = (ulong)d_possibleOutcomes;
 
 		for(uint i = 0; i <= maxRollSum; i++) {
-			partitions.Add(new List<Partition>());
+			//partitions.Add(new List<Partition>());
 			compositionsSubtotals.Add(0);
 			sum_probability.Add(0);
 		}
@@ -115,9 +115,11 @@ public class DnD_Dice_Probability_Space_Crawler {
 	public void SearchPartitions() { // and for each partition compute number of its compositions...
 		// only count rollSum with same compositions count once (symetrie)
 		uint upTo = minRollSum / 2 + maxRollSum / 2;
-		for(uint i = minRollSum; i <= upTo; i++) {
-			targetSum = (int)i; // save the target sum here, so that recursive calls of search dont need to pass the value..
-			SearchPartitions(new List<uint>(), i, 1);
+		for(int i = (int)minRollSum; i <= upTo; i++) {
+			targetSum = i; // save the target sum here, so that recursive calls of search dont need to pass the value..
+			SearchPartitions(new List<uint>(), (uint)i, 1);
+			allCompositions += compositionsSubtotals[targetSum];
+			sum_probability[i] = (double)compositionsSubtotals[i] / d_possibleOutcomes;
 		}
 	}
 
@@ -127,8 +129,9 @@ public class DnD_Dice_Probability_Space_Crawler {
 		if (remaining == 0) {								// partition in list now contains sum of target sum of initial call
 			if (list.Count != dices)						// assert that partition contains correct ammount of parts
 				return;
-			Partition p = new(list, diceMaxVal);			// partitions found, initiliaze it and it to partitions List
-			partitions[targetSum].Add(p);
+			Partition p = new(list, diceMaxVal);			// partitions found, initiliaze it and add it to partitions List
+			// partitions[targetSum].Add(p);
+			compositionsSubtotals[targetSum] += p.compositions;
 
 		} else {
 			if (list.Count == dices)						// if count of parts equals count of dices, but sum has not been reached (remaining != 0), this branch will not get there...
@@ -149,10 +152,10 @@ public class DnD_Dice_Probability_Space_Crawler {
 		uint upTo = minRollSum / 2 + maxRollSum / 2;
 
 		for (int i = 1; i <= upTo; i++) {
-			foreach(Partition p in partitions[i]) 
-				compositionsSubtotals[i] += p.compositions;
-			allCompositions += compositionsSubtotals[i];
-			sum_probability[i] = (double) compositionsSubtotals[i] / d_possibleOutcomes;
+			//foreach(Partition p in partitions[i]) 
+			//	compositionsSubtotals[i] += p.compositions;
+			// allCompositions += compositionsSubtotals[i];
+			//sum_probability[i] = (double) compositionsSubtotals[i] / d_possibleOutcomes;
 		}
 
 		// now copy raw results: number of compositions and probability to its symetric rollSums..
@@ -188,6 +191,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 			sw.WriteLine("\n\n   >>> Detailed log <<< \n\n");
 
 			// detailed log
+			/*
 			for (int i = 1; i < partitions.Count; i++) {
 				if(compositionsSubtotals[i] == 0)
 					continue;
@@ -199,7 +203,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 					sw.WriteLine($" => compositions: {partitions[i][j].compositions}");
 				}
 				sw.WriteLine();
-			}
+			}*/
 		}
 	}
 }
