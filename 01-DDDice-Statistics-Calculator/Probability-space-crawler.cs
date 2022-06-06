@@ -129,8 +129,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 		if (remaining == 0) {								// partition in list now contains sum of target sum of initial call
 			if (list.Count != dices)						// assert that partition contains correct ammount of parts
 				return;
-			Partition p = new(list, diceMaxVal);			// partitions found, initiliaze it and add it to partitions List
-			// partitions[targetSum].Add(p);
+			Partition p = new(list, diceMaxVal);			// partitions found, initiliaze it and add compositions count to total
 			compositionsSubtotals[targetSum] += p.compositions;
 
 		} else {
@@ -139,24 +138,15 @@ public class DnD_Dice_Probability_Space_Crawler {
 			uint limit = Min(diceMaxVal, remaining);		// minimum from ( "max dice value" or "remaining to targetSum" )
 
 			for (uint i = searched; i <= limit; i++) {		// foreach next part
-				List<uint> next = new();					// initilize new List
-				foreach (uint x in list)					// copy its values from parameter input
-					next.Add(x);							
-				next.Add(i);								// add the next part
-				SearchPartitions(next, remaining - i, i);	// recurcsively call self with the new list
+				list.Add(i);
+				SearchPartitions(list, remaining - i, i);	// recurcsively call self with extended list
+				list.RemoveAt(list.Count-1);
 			}
 		}
 	}
 
 	public void Sum_Compositions_Probabilities() {
 		uint upTo = minRollSum / 2 + maxRollSum / 2;
-
-		for (int i = 1; i <= upTo; i++) {
-			//foreach(Partition p in partitions[i]) 
-			//	compositionsSubtotals[i] += p.compositions;
-			// allCompositions += compositionsSubtotals[i];
-			//sum_probability[i] = (double) compositionsSubtotals[i] / d_possibleOutcomes;
-		}
 
 		// now copy raw results: number of compositions and probability to its symetric rollSums..
 		int x = (int)minRollSum;
@@ -184,26 +174,6 @@ public class DnD_Dice_Probability_Space_Crawler {
 					continue;
 				sw.WriteLine($"Roll sum: {i}, compositions: {compositionsSubtotals[i]}, probability: {sum_probability[i]}");
 			}
-			
-			if(diceType == DiceType.d20 && dices > 6) 
-				return; // detailed log files for these dice types are too large.
-
-			sw.WriteLine("\n\n   >>> Detailed log <<< \n\n");
-
-			// detailed log
-			/*
-			for (int i = 1; i < partitions.Count; i++) {x
-				if(compositionsSubtotals[i] == 0)
-					continue;
-				sw.WriteLine($"Target sum: {i}, has total of {compositionsSubtotals[i]} and probability: {sum_probability[i]}");
-				sw.WriteLine("Partitions enumeration:");
-				for (int j = 0; j < partitions[i].Count; j++) {
-					foreach(uint part in partitions[i][j].parts)
-						sw.Write($"{part} ");
-					sw.WriteLine($" => compositions: {partitions[i][j].compositions}");
-				}
-				sw.WriteLine();
-			}*/
 		}
 	}
 }
