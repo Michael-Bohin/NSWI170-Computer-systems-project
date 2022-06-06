@@ -8,7 +8,7 @@ public record TrieNode {
 		val = value;
 	}
 	public ulong val;
-	public TrieNode[] children = new TrieNode[21]; // for max repetition posssible at 9d20
+	public Dictionary<int, TrieNode> children = new (); // for max repetition posssible at 9d20
 }
 
 public class CachedVariationsCount {
@@ -33,9 +33,8 @@ public class CachedVariationsCount {
 
 		TrieNode node = root;
 		foreach (int rep in repetitions) {
-			if(node.children[rep] == null) {
+			if(!node.children.ContainsKey(rep))
 				node.children[rep] = new TrieNode(node.val / factorial[rep]); // here the division is done only once -> in the implementation before it was repeated thousands of times
-			}
 			node = node.children[rep];
 		}
 
