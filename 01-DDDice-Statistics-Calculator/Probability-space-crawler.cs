@@ -5,6 +5,14 @@ public enum DiceType { d4 = 4, d6 = 6, d8 = 8, d10 = 10, d12 = 12, d20 = 20 };
 public record Partition {
 	public List<uint> parts = new();
 	public ulong compositions;
+
+	void Compositions(List<uint> partition) {
+		// .. write your code here ..
+
+
+
+		compositions = 1;
+	}
 }
 
 public record RollSum {
@@ -13,7 +21,6 @@ public record RollSum {
 	public ulong totalCompositions;
 	public double probability; // = totalCompositions / possibleOutcomes
 }
-
 
 public class DnD_Dice_Probability_Space_Crawler {
 	//
@@ -55,9 +62,5 @@ public class DnD_Dice_Probability_Space_Crawler {
 
 	}
 
-	ulong Compositions(List<uint> partition) {
-		// .. write your code here ..
-
-		return 1;
-	}
+	
 }
