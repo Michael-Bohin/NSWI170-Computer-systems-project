@@ -16,7 +16,7 @@ public record Partition {
 		foreach (int i in parts)
 			counts[i]++;
 
-		compositions = factorial[parts.Count]; 
+		compositions = factorial[parts.Count];
 		foreach (uint opakovani in counts)
 			if (opakovani > 1)
 				compositions /= factorial[opakovani];
@@ -27,6 +27,8 @@ public record Partition {
 // 1. Pocet compositions je symetricky - druhou pulku nemusime pocitat, staci opsat vysledek
 // 2. Pocitej vycet partitions pro ruzne soucty paralelne. Jejich vypocet je nezavisly.
 // 3. Rozmysli si zpusob jak nekopirovat List<uint> v rekurzivnim hledani Searchpartitions.
+// 4. Predpocitej si pocet partitions pro vsechny pocitane kombinace. 99% Vypocet variace s opakovanim hodnekrat opakuje.
+// 5. Napis funkci ktera udela lookup vysledku
 public class DnD_Dice_Probability_Space_Crawler {
 	//
 	// >>> these data are important for json serializer and catch all results of space crawl <<<
@@ -36,15 +38,16 @@ public class DnD_Dice_Probability_Space_Crawler {
 	public readonly uint diceMaxVal;
 	public readonly uint minRollSum, maxRollSum; // defines inclusive range of possible roll outcomes
 	public readonly ulong possibleOutcomes;
-	public ulong allCompositions; // sum of totalCompositions of all roll sums, used as double check of correctness. Must be equal to possible Outcomes.
-	public List<List<Partition>> partitions = new();
 	public List<ulong> compositionsSubtotals = new();
 	public List<double> sum_probability = new();
+	
 	//
 	// >>> end of serializer relevant data <<<
 	//
 	int targetSum;
 	readonly double d_possibleOutcomes; // reasonable to also save as double, as it would be recasted from long to double many times in probs calculation...
+	ulong allCompositions; // sum of totalCompositions of all roll sums, used as double check of correctness. Must be equal to possible Outcomes.
+	List<List<Partition>> partitions = new();
 
 	public DnD_Dice_Probability_Space_Crawler(uint d, DiceType dt) {
 		dices = d;
@@ -117,7 +120,12 @@ public class DnD_Dice_Probability_Space_Crawler {
 					continue;
 				sw.WriteLine($"Roll sum: {i}, compositions: {compositionsSubtotals[i]}, probability: {sum_probability[i]}");
 			}
+			
+			if(diceType == DiceType.d20 && dices > 6) 
+				return; // detailed log files for these dice types are too large.
+
 			sw.WriteLine("\n\n   >>> Detailed log <<< \n\n");
+
 			// detailed log
 			for (int i = 1; i < partitions.Count; i++) {
 				if(compositionsSubtotals[i] == 0)
