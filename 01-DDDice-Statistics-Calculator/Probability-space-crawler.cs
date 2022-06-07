@@ -84,9 +84,8 @@ public class DnD_Dice_Probability_Space_Crawler {
 		} else {
 			if (list.Count == Dices)                        // if count of parts equals count of dices, but sum has not been reached (remaining != 0), this branch will not get there...
 				return;
-			int limit = Min(DiceMaxVal, remaining);        // minimum from ( "max dice value" or "remaining to targetSum" )
 
-			for (int i = searched; i <= limit; i++) {      // foreach next part
+			for (int i = searched; i <= Min(DiceMaxVal, remaining); i++) {      // foreach next part
 				list.Add(i);
 				SearchPartitions(list, remaining - i, i);   // recurcsively call self with extended list
 				list.RemoveAt(list.Count - 1);
@@ -97,28 +96,22 @@ public class DnD_Dice_Probability_Space_Crawler {
 	// make use of the fact that the way the recursion search
 	// is written guarantees that parts are sorted in nondecreasing manner
 	ulong CalculateCompositions(List<int> parts) {
-		List<int> repetitions = new();
+		ulong result = citatel;
 		int current = 1, count = 0;
 		foreach (int part in parts) {
 			if(part == current) {
 				count++;
 			} else {
-				if(count > 1) 
-					repetitions.Add(count);
+				if(count > 1)
+					result /= factorial[count];
 				count = 1;
 				current = part;
 			}
 		}
 
 		if(count > 1)
-			repetitions.Add(count);
-
-		if (repetitions.Count == 0) // case no repetitions -> variation is permutation
-			return citatel;
-
-		ulong result = citatel;
-		foreach(int rep in repetitions) 
-			result /= factorial[rep];
+			result /= factorial[count];
+			
 		return result;
 	}
 
