@@ -2,39 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Math;
-using static System.Console;
 public enum DiceType { d4 = 4, d6 = 6, d8 = 8, d10 = 10, d12 = 12, d20 = 20 };
-
-public record TrieNode {
-	public TrieNode(ulong value) { val = value;	}
-	public ulong val;
-	public Dictionary<int, TrieNode> children = new();
-}
-
-public class CachedVariationsCount {
-	public TrieNode root = new TrieNode(1);
-	public ulong citatel = 1;
-	static readonly ulong[] factorial = new ulong[] { 1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880 };
-
-	public void ResetCachedVariations(int nextDicesCount) {
-		citatel = factorial[nextDicesCount];
-		root = new TrieNode(citatel);
-	}
-
-	public ulong GetVariation(List<int> repetitions) {
-		if (repetitions.Count == 0) // case no repetitions -> variation is permutation
-			return citatel;
-
-		TrieNode node = root;
-		foreach (int rep in repetitions) {
-			if (!node.children.ContainsKey(rep))
-				node.children[rep] = new TrieNode(node.val / factorial[rep]); // here the division is done only once -> in the implementation before it was repeated thousands of times
-			node = node.children[rep];
-		}
-
-		return node.val;
-	}
-}
 
 public class DnD_Dice_Probability_Space_Crawler {
 	//
@@ -53,7 +21,8 @@ public class DnD_Dice_Probability_Space_Crawler {
 	//
 	int targetSum;
 	readonly double d_possibleOutcomes; // reasonable to also save as double, as it would be recasted from long to double many times in probs calculation...
-	static readonly CachedVariationsCount variationsCache = new();
+	readonly ulong[] factorial = new ulong[] { 1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880 };
+	readonly ulong citatel;
 
 	public DnD_Dice_Probability_Space_Crawler(int Dices, DiceType DiceType) {
 		this.Dices = Dices;
@@ -64,6 +33,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 		MaxRollSum = Dices * DiceMaxVal;
 		d_possibleOutcomes = Pow(DiceMaxVal, Dices);
 		PossibleOutcomes = (ulong)d_possibleOutcomes;
+		citatel = factorial[Dices];
 
 		for (int i = 0; i <= MaxRollSum; i++) {
 			CompositionsSubtotals.Add(0);
@@ -84,6 +54,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 		MaxRollSum = Dices * DiceMaxVal;
 		d_possibleOutcomes = Pow(DiceMaxVal, Dices);
 		PossibleOutcomes = (ulong)d_possibleOutcomes;
+		citatel = factorial[Dices];
 	}
 
 	// and for each partition compute number of its compositions...
@@ -118,26 +89,36 @@ public class DnD_Dice_Probability_Space_Crawler {
 		}
 	}
 
+	// make use of the fact that the way the recursion search
+	// is written guarantees that parts are sorted in nondecreasing manner
 	ulong CalculateCompositions(List<int> parts) {
-		int[] counts = new int[DiceMaxVal + 1];
-		foreach (int i in parts)
-			counts[i]++;
-
 		List<int> repetitions = new();
-		foreach (int opakovani in counts)
-			if (opakovani > 1)
-				repetitions.Add(opakovani);
+		int current = 1, count = 0;
+		foreach (int part in parts) {
+			if(part == current) {
+				count++;
+			} else {
+				if(count > 1) 
+					repetitions.Add(count);
+				count = 1;
+				current = part;
+			}
+		}
 
-		if (repetitions.Count > 1)
-			repetitions.Sort(); // this opp might make it not worth it..
+		if(count > 1)
+			repetitions.Add(count);
 
-		return variationsCache.GetVariation(repetitions);
+		if (repetitions.Count == 0) // case no repetitions -> variation is permutation
+			return citatel;
+
+		ulong result = citatel;
+		foreach(int rep in repetitions) 
+			result /= factorial[rep];
+		return result;
 	}
 
-	public void ResetCachedVariations(int nextDicesCount) => variationsCache.ResetCachedVariations(nextDicesCount);
-
 	public void Sum_Compositions_Probabilities() {
-		// now copy raw results: number of compositions and probability to its symetric rollSums..
+		// copy raw results: number of compositions and probability to its symetric rollSums..
 		int x = MinRollSum;
 		int y = MaxRollSum;
 		while (x < y) {
@@ -147,27 +128,16 @@ public class DnD_Dice_Probability_Space_Crawler {
 			x++;
 			y--;
 		}
-		// now assert allComositions == possibleOutcomes, if not, the code is incorrect -> kill the process
+		// assert allComositions == possibleOutcomes, if not, the code is incorrect -> kill the process
 		if (AllCompositions != PossibleOutcomes)
 			throw new Exception($"All compositions and possible outcomes are not the same at the end of probability space crawl!\n There is critical error in code.\n {AllCompositions} != {PossibleOutcomes}, dices: {Dices}, diceType: {DiceType}");
 	}
 
 	public void PrintAndSerialize() {
-		/*using (StreamWriter sw = new($"./{Dices}d{(int)DiceType}-Rolls-Summary-Crawler.txt")) {
-			sw.WriteLine($"Dices: {Dices}, dice type: {DiceType}, possible combinations: {PossibleOutcomes}");
-			// sum and probabilities of sums:
-			for (int i = 1; i <= MaxRollSum; i++) {
-				if (CompositionsSubtotals[i] == 0)
-					continue;
-				sw.WriteLine($"Roll sum: {i}, compositions: {CompositionsSubtotals[i]}, probability: {SumProbability[i]}");
-			}
-		}*/
-
 		JsonSerializerOptions options = new() { WriteIndented = true };
 		string json = JsonSerializer.Serialize(this, options);
 
 		using (StreamWriter sw = new($"./{Dices}d{(int)DiceType}-Rolls-Summary-Crawler.json"))
 			sw.Write(json);
-
 	}
 }

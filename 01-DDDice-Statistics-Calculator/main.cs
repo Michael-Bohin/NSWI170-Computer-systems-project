@@ -9,8 +9,8 @@ class Program {
             // Partition.ResetCachedVariations(dices); // reset variation equation results in cache
             foreach (DiceType type in Enum.GetValues<DiceType>()) {
                 DnD_Dice_Probability_Space_Crawler crawler = new(dices, type);
-                if(type == DiceType.d4)
-                    crawler.ResetCachedVariations(dices);
+                // if(type == DiceType.d4)
+                // crawler.ResetCachedVariations(dices);
                 crawler.SearchPartitions();
                 crawler.Sum_Compositions_Probabilities();
                 crawler.PrintAndSerialize();
