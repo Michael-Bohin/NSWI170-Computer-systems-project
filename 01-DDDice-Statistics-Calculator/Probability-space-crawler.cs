@@ -10,7 +10,7 @@ public class DnD_Dice_Probability_Space_Crawler {
 	//
 	[JsonInclude]
 	public readonly int Dices, DiceMaxVal, MinRollSum, MaxRollSum;
-	public DiceType DiceType { get; }
+	DiceType DiceType { get; }
 	public ulong PossibleOutcomes { get; }
 	// calculated after constructor:
 	public List<ulong> CompositionsSubtotals { get; } = new();
