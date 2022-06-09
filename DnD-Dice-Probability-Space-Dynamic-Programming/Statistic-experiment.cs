@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Math;
+using MathNet.Numerics.Distributions;
 
 // input from expected model (only probs)
 record RollSumStat {
@@ -43,7 +44,6 @@ record DnD_Dice_Statistic_Experiment {
 	}
 }
 
-
 enum ExperimentDecision { InvalidExperiment_ExpectedMinimumLessThan5, NotRejected, RejectedAtAlpha10, RejectedAtAlpha5, RejectedAtAlpha1 }
 
 record ExperimentResult {
@@ -55,12 +55,13 @@ record ExperimentResult {
 	public double Alpha_10_critical { get; }
 	public double Alpha_5_critical { get; }
 	public double Alpha_1_critical { get; }
+	public double Pvalue { get;}
 	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public ExperimentDecision Decision { get; }
 	public double DurationSec { get; private set; }
 	public double DurationMs { get; private set; }
 
-	public ExperimentResult(string DiceType, long Throws, double MinimumExpectedSum, double ChiSquareValue, int DegreesOfFreedom, double Alpha_10_critical, double Alpha_5_critical, double Alpha_1_critical, ExperimentDecision Decision) {
+	public ExperimentResult(string DiceType, long Throws, double MinimumExpectedSum, double ChiSquareValue, int DegreesOfFreedom, double Alpha_10_critical, double Alpha_5_critical, double Alpha_1_critical, double Pvalue, ExperimentDecision Decision) {
 		this.DiceType = DiceType;
 		this.Throws = Throws;
 		this.MinimumExpectedSum = MinimumExpectedSum;
@@ -69,6 +70,7 @@ record ExperimentResult {
 		this.Alpha_10_critical = Alpha_10_critical;
 		this.Alpha_5_critical = Alpha_5_critical;
 		this.Alpha_1_critical = Alpha_1_critical;
+		this.Pvalue = Pvalue;
 		this.Decision = Decision;
 	}
 
@@ -142,24 +144,20 @@ class DnD_Dice_Mass_Thrower {
 
 		expResult = EvaluateResult(minimumExpected);
 		return expResult;
-		//string result = $"{dices}{diceType}: {chiSquareSum}";
-		// arciSum += chiSquareSum;
-		// Console.WriteLine(result);
-		// AllResults.Add(result);
 	}
 
 	ExperimentResult EvaluateResult(double minimumExpected) {
 		string dt = $"{dices}{diceType}";
 		int degreesOfFreedom = maxRollSum - minRollSum;
 
-		// TODO evaluate based on degrees of freedom...
-		double alpha10 = 100.0;
-		double alpha5 = 90.0;
-		double alpha1 = 80.0;
+		double alpha10 = ChiSquared.InvCDF(degreesOfFreedom, 0.90);
+		double alpha5 = ChiSquared.InvCDF(degreesOfFreedom, 0.95);
+		double alpha1 = ChiSquared.InvCDF(degreesOfFreedom, 0.99);
+		double pValue = 1.0 - ChiSquared.CDF(degreesOfFreedom, chiSquareSum);
 
 		ExperimentDecision decision = Decide(chiSquareSum, minimumExpected, alpha10, alpha5, alpha1);
 
-		ExperimentResult result = new(dt, throws, minimumExpected, chiSquareSum, degreesOfFreedom, alpha10, alpha5, alpha1, decision);
+		ExperimentResult result = new(dt, throws, minimumExpected, chiSquareSum, degreesOfFreedom, alpha10, alpha5, alpha1, pValue, decision);
 		return result;
 
 	}

@@ -5,7 +5,7 @@ using System.Text.Json;
 class Program {
 	static void Main() {
 		List<ExperimentResult> experimentResults = new();
-		long experiment_repetitions = 10_000_000;
+		long experiment_repetitions = 100_000_000;
 
 		foreach (DiceType type in Enum.GetValues<DiceType>()) {
 			DnD_Dice_Probability_Calculator pc = new(type);
@@ -38,6 +38,5 @@ class Program {
 		string json = JsonSerializer.Serialize(experimentResults, options);
 		using StreamWriter writer = new($"./Experiments-Statistic-Summaries-Reps_{experiment_repetitions}.json");
 		writer.Write(json);
-		// !! add sum in one place enumeration of results how many invalid, not rejceted , rej.. etc. , and which? 
 	}
 }
