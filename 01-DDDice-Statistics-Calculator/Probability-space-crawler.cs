@@ -75,19 +75,21 @@ public class DnD_Dice_Probability_Space_Crawler {
 	// 3. Return because there are as many parts as required dices, but target sum has not been reached
 	// 4. Continue recursion by adding all possible parts (non-decreasing order)
 	void SearchPartitions(List<int> list, int remaining, int searched) {
-		if (remaining == 0) {                               // partition in list now contains sum of target sum of initial call
-			if (list.Count != Dices)                        // assert that partition contains correct ammount of parts
+		if (remaining == 0) {			// partition in list now contains sum of target sum of initial call
+			if (list.Count != Dices)    // assert that partition contains correct ammount of parts
 				return;
-
 			CompositionsSubtotals[targetSum] += CalculateCompositions(list);
 
 		} else {
-			if (list.Count == Dices)                        // if count of parts equals count of dices, but sum has not been reached (remaining != 0), this branch will not get there...
+			// if count of parts equals count of dices,
+			// but sum has not been reached (remaining != 0), return..
+			if (list.Count == Dices)    
 				return;
 
-			for (int i = searched; i <= Min(DiceMaxVal, remaining); i++) {      // foreach next part
+			for (int i = searched; i <= Min(DiceMaxVal, remaining); i++) {
+				// foreach next part recurcsively call self with extended list:
 				list.Add(i);
-				SearchPartitions(list, remaining - i, i);   // recurcsively call self with extended list
+				SearchPartitions(list, remaining - i, i);   
 				list.RemoveAt(list.Count - 1);
 			}
 		}
