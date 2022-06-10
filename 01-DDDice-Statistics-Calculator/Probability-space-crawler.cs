@@ -70,24 +70,23 @@ public class DnD_Dice_Probability_Space_Crawler {
 	}
 
 	// There are 4 options what can happen with the recursive call:
-	// 1. Return because the target sum has been reached, but with too few parts
-	// 2. Having correct partitions, add its number of compositions to total and return
-	// 3. Return because there are as many parts as required dices, but target sum has not been reached
-	// 4. Continue recursion by adding all possible parts (non-decreasing order)
+	// 1. Return, the target sum has been reached, but with too few parts
+	// 2. Case correct partition -> add its number of compositions to total
+	// 3. Return, there are as many parts as required dices,
+	//    but target sum has not been reached
+	// 4. Continue recursion by adding all possible parts (non-decreasing)
 	void SearchPartitions(List<int> list, int remaining, int searched) {
-		if (remaining == 0) {			// partition in list now contains sum of target sum of initial call
-			if (list.Count != Dices)    // assert that partition contains correct ammount of parts
-				return;
+		if (remaining == 0) {
+			if (list.Count != Dices)    
+				return; // << 1.
+			// 2.:
 			CompositionsSubtotals[targetSum] += CalculateCompositions(list);
 
 		} else {
-			// if count of parts equals count of dices,
-			// but sum has not been reached (remaining != 0), return..
 			if (list.Count == Dices)    
-				return;
-
+				return; // << 3.
+			// 4.:
 			for (int i = searched; i <= Min(DiceMaxVal, remaining); i++) {
-				// foreach next part recurcsively call self with extended list:
 				list.Add(i);
 				SearchPartitions(list, remaining - i, i);   
 				list.RemoveAt(list.Count - 1);
